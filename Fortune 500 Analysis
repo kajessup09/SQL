@@ -61,42 +61,37 @@ VALUES
 SELECT *
 FROM fortune_companies;
 
-Select Company_name
-From fortune_companies
-Where industry="Technology";
-
 #Which company has the least paid days off?
 SELECT company_name, MIN(paid_time_off_days)
 FROM fortune_companies
-Where paid_time_off_days;
+WHERE paid_time_off_days;
 
-# Assign all the companies in the Healthcare industry as "family friendly workplace", "acceptable", or "abysmal" based on the paid days off offered. 
+#Assign all the companies in Technology as "Family Friendly", "acceptable", or "abysmal" based on the paid days off offered.
 SELECT company_name,
 CASE 
   WHEN paid_time_off_days >= 20 THEN 'Family Friendly'
-  WHEN paid_time_off_days >= 15 THEN 'Acceptable'
+  WHEN paid_time_off_days >= 15 THEN 'acceptable'
   ELSE 'abysmal'
-END as family_friendliness
+END as Family_Focused
 FROM fortune_companies
-WHERE industry='Healthcare'
-;
+WHERE industry = "Technology";
 
-# Which industries have an average revenue of at least $150 Million, and what are their avg revenues?
-SELECT industry, ROUND(AVG(revenue),1) as avg_revenue_millions
+#Industries with a revenue greater than 1500.
+SELECT industry, SUM (revenue) as total_revenue
 FROM fortune_companies
 GROUP BY industry
-HAVING avg_revenue_millions>=150
-;
+HAVING total_revenue>1500;
 
-# Which companies have healthcare benefits *and* at least 10 Maternity Leave Weeks?
-SELECT company_name
+#Companies that offer healthcare and more than 20 days PTO.
+SELECT company_name, paid_time_off_days
 FROM fortune_companies
-WHERE maternity_leave_weeks>10
-AND healthcare_benefits=1
-;
+WHERE healthcare_benefits = 1
+AND paid_time_off_days>20;
 
-# Which company in the Finance industry has the least revenue, and what is their revenue? 
-SELECT company_name, min(revenue)
+#Companies with average employees between 1,000 and 3,000.
+SELECT company_name, AVG (employees)
 FROM fortune_companies
-WHERE industry = 'Finance'
-;
+WHERE employees>1000
+AND employees<3000
+GROUP BY industry
+
