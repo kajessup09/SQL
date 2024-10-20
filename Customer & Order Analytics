@@ -1,5 +1,7 @@
 #In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data. 
 
+#Project 1
+
 #1. How many orders were placed in January?
 SELECT count(orderid)
 FROM bit_db.JanSales
@@ -59,3 +61,45 @@ SELECT product, (sum)quantity
 FROM bit_db.FebSales
 WHERE location like '%Los Angeles%'
 GROUP BY Product;
+
+#Project 2
+
+#1. Which locations in New York received at least 3 orders in January, and how many orders did they each receive?
+SELECT distinct location, count(orderID)
+FROM BIT_DB.JanSales
+WHERE location LIKE '%NY%'
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY location
+HAVING count(orderID)>2;
+
+#2. How many of each type of headphone were sold in February?
+SELECT sum(Quantity) as quantity,
+Product
+FROM BIT_DB.FebSales 
+WHERE Product like '%Headphones%'
+GROUP BY Product;
+
+#3. What was the average amount spent per account in February?
+SELECT AVG(quantity*price)
+FROM BIT_DB.FebSales Feb
+LEFT JOIN bit_db.customers cust
+ON FEB.orderid = cust.order_id
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+#4. What was the average quantity of products purchased per account in February?
+SELECT sum(quantity)/count(cust.acctnum)
+FROM Bit_db.FebSales Feb
+LEFT JOIN bit_DB.customers cust
+ON Feb.orderid = cust.order_id
+WHERE length(orderid) = 6
+AND orderid <> 'Order ID';
+
+#5. Which product brought in the most revenue in January and how much revenue did it bring in total?
+SELECT product, SUM(quantity*price)
+FROM BIT_DB.JanSales
+GROUP BY product
+ORDER BY sum(quantity*Price) desc
+LIMIT 1;
+ 
